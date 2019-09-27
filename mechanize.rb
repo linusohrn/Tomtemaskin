@@ -6,20 +6,39 @@ require 'byebug'
 
 agent = Mechanize.new
 
-page = agent.get('http://oddschecker.com/')
+class Findus
+    
+    page = agent.get('http://oddschecker.com/')
+    
+    sports = {}
+    
+    sports_good =["Tennis", "Ice Hockey", "Table Tennis", "Basketball", "American Football", "Badminton", "Baseball"]
+    
+    # p link_links
+    good_links = []
+    
+    sports_good.each do |sport|
+        good_links << page.link_with(:text => sport)
+    end
+    
+    # puts good_links
+    
+    docs = {}
 
-sports = {}
+    def mech_to_noko(mech)
+        return Nokogiri::HTML(open(mech))        
+    end
 
-sports_good =["Tennis", "Ice Hockey", "Table Tennis", "Basketball", "American Football", "Badminton", "Baseball"]
-
-# p link_links
-good_links = {}
-
-sports_good.each do |sport|
-    good_links[sport] = page.link_with(:text => sport)
+    def noko_to_mech(noko)
+        return       
+    end
+    
+    good_links.each do |link|
+        
+        # puts link
+        docs = Nokogiri::HTML(open(link))
+    end
+    
 end
 
-# good_links.each do |link|
-#     link.
-# end
 
