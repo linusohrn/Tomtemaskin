@@ -1,0 +1,4 @@
+require 'rubygems'
+require 'nokogiri'
+require 'byebug'
+require 'mechanize'
