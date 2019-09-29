@@ -6,18 +6,18 @@ require 'mechanize'
 Dir.glob("*.rb") { |f| require_relative f}
 
 
-a = Mechanize.new { |agent|
-    agent.user_agent_alias = 'Mac Safari'
-}
 
-
-a.get('https://oddschecker.com/ice-hockey/nhl')
-class Findus < Mechanize::Page
+class Findus < Mechanize
     
     
-    
+    def val_good_links(page)
+        
+        page.links_with(class: "link-item beta-footnote").each do |link|
+            puts link
+            
+        end
+        
+    end
     
 end
-
-agent = Findus.new
 
