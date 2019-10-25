@@ -2,7 +2,7 @@ require 'rubygems'
 # require 'nokogiri'
 require 'byebug'
 require 'mechanize'
-
+require 'pp'
 # Dir.glob("*.rb") { |f| require_relative f}
 
 
@@ -12,7 +12,8 @@ class Findus < Mechanize
         list_links = []
         list.each do |temp_link|
             list_links << get(temp_link.uri)
-            sleep(0.01)
+            @fetches += 1
+            sleep(0.001)
         end
         return list_links
         
@@ -30,18 +31,20 @@ class Findus < Mechanize
                     
                     link.click.links_with(class: "list-text-indent beta-callout").each do |lonk|
                         sports << lonk
+                        # puts lonk
                         
                     end
                 else
                     sports << link
+                    # puts link
                 end
             end
         end
         
-        sport_page = get_link(sports)
+        sport_pages = get_link(sports)
         
         
-        return sport_page
+        return sport_pages
     end
     
     
@@ -53,42 +56,68 @@ class Findus < Mechanize
             # puts sport.uri
             if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
                 if sport.search('td.bet-headers').at('td:contains("Draw")')
-                    # puts sport.search('td.bet-headers').at('td:contains("Draw")')
-                    # puts sport.search("//td[@class='bet-headers beta-callout']")
+                    # puts "Draw possible, no bet"
+                    # pp sport.uri
                 else
                     
                     # puts sport.uri
                     # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
                     sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
-                        good_matches << temp
+                        good_matches << temp.click
+                        # pp temp.click.uri
                     end
                 end
                 
                 
             end
             
-            matches = get_link(good_matches)
-            
-            return matches
         end
+        matches = get_link(good_matches)
+        return matches
     end
     
     def get_odds(matches)
+        odds = {}
+        
         
         matches.each do |match|
+            # pp match.uri
+            temp_arr = []
+            odds_arr = []
+            # pp match.search('td.bc.bs')
+            match.search('td.bc.bs').each do |odd|
+                # pp odd.children.text
+                temp_arr << odd.children.text
+            end 
+            # pp temp_arr
+            long = (temp_arr.length / 2)
+            puts long
+            temp_arr.each_slice(long) {|a|
+            odds_arr << a
+            }
+            # pp odds_arr
+            odds[match.uri] = odds_arr
             
-            puts match.attr("data-best-dig")
             
         end
+        pp odds
+        return odds
         
     end
     
     def init(page)
-        
+        system("cls") 
+        @fetches = 0
+        @time = Time.now
         agent = self.get(page)
-        sports = get_good_links(agent)
-        matches = get_matches(sports)
-        get_odds(matches)
+        sport_pages = get_good_links(agent)
+        matches = get_matches(sport_pages)
+        odds = get_odds(matches)
+        # pp odds
+        puts @fetches
+        @deltatime = Time.now - @time
+        puts "#{@deltatime} seconds"
+        
         
     end
     
@@ -98,5 +127,3 @@ end
 
 
 Findus.new.init('https://oddschecker.com/')
-
-
