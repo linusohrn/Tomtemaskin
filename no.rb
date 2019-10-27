@@ -1,9 +1,9 @@
-require 'rubygems'
-require 'nokogiri'
-require 'byebug'
-require 'mechanize'
+# require 'rubygems'
+# require 'nokogiri'
+# require 'byebug'
+# require 'mechanize'
 
-# Dir.glob("*.rb") { |f| require_relative f}
+# # Dir.glob("*.rb") { |f| require_relative f}
 
 
 
