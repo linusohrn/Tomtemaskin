@@ -9,13 +9,13 @@ require 'mechanize'
 
 
 
-page = Mechanize.new.get('https://oddschecker.com/')
+# page = Mechanize.new.get('https://oddschecker.com/')
 
 
-page.links_with(class: "nav-link beta-footnote").each do |link|
-    puts link
+# page.links_with(class: "nav-link beta-footnote").each do |link|
+#     puts link
     
-end
+# end
 
 
 

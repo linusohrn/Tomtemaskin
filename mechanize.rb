@@ -6,27 +6,32 @@ require 'mechanize'
 Dir.glob("*.rb") { |f| require_relative f}
 
 
-class Mechanize
-    
+class Spider < Mechanize
     
     def initialize
         
-        # @page = self.get('https://oddschecker.com/')
-        @findus = Findus.new
+        @page = self.get('https://oddschecker.com/')
         
     end
     
+    # byebug
     def update
         
         @findus.val_good_links(@page)
         
     end
+
+    def val_good_links(page)
+        
+        page.links_with(class: "link-item beta-footnote").each do |link|
+            puts link
+            
+        end
+        
+    end
     
 end
 
-
-
-
-Mechanize.new.get('https://oddschecker.com/')
+Spider.new
 
 

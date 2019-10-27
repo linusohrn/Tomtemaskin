@@ -9,7 +9,6 @@ Dir.glob("*.rb") { |f| require_relative f}
 
 class Findus < Mechanize
     
-    
     def val_good_links(page)
         
         page.links_with(class: "link-item beta-footnote").each do |link|
