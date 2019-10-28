@@ -6,6 +6,9 @@ require_relative 'findus.rb'
 require_relative 'prillan.rb'
 require_relative 'gumman.rb'
 
+#   Handler
+#   Ser till att alla funktioner körs och i rätt ordning, samt loopar hämta matcher och odds
+#
 class Sven_Nordqvist
     
     def initialize

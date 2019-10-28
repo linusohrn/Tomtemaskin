@@ -1,4 +1,7 @@
 require_relative 'gumman.rb'
+#   Collector
+#   Hämtar oddsen från sidorna
+#   
 class Prillan < Mechanize
     
     def initialize

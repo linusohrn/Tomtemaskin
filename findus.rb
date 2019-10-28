@@ -1,4 +1,7 @@
 require_relative 'gumman.rb'
+#   Web crawler
+#   Hämtar alla sidorna med vissa krav
+#
 class Findus < Mechanize
     
     def initialize
