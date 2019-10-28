@@ -91,26 +91,17 @@ class Findus < Mechanize
             end 
             # pp temp_arr
             long = (temp_arr.length / 2)
-            puts long
-            temp_arr.each_slice(long) {|a|
-            odds_arr << a
-            }
-            # pp odds_arr
-            odds[match.uri] = odds_arr
+            if long > 1
+                temp_arr.each_slice(long) {|a|
+                    odds_arr << a
+                }
+                # pp odds_arr
+                odds[match.uri] = odds_arr
+            end
             
             
         end
-        pp odds
         return odds
-        
-    end
-
-    def val_good_links(page)
-        
-        page.links_with(class: "link-item beta-footnote").each do |link|
-            puts link
-            
-        end
         
     end
     
@@ -119,6 +110,7 @@ class Findus < Mechanize
         @fetches = 0
         @time = Time.now
         agent = self.get(page)
+        puts self.get(page)
         sport_pages = get_good_links(agent)
         matches = get_matches(sport_pages)
         odds = get_odds(matches)
