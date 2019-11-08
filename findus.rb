@@ -9,17 +9,7 @@ class Findus < Mechanize
         @gumman = Gumman.new
         @page = self.get('https://oddschecker.com/')
     end
-
-    def get_link(list)
-        list_links = []
-        list.each do |temp_link|
-            list_links << get(temp_link.uri)
-            add_fetch_db(temp_link.uri)
-            sleep(0.03)
-        end
-        return list_links
-        
-    end
+    
     
     def add_fetch_db(link)
         @gumman.add_fetch_db(link)
@@ -35,50 +25,44 @@ class Findus < Mechanize
                 if link.click.links_with(class: "list-text-indent beta-callout").empty? != true
                     
                     link.click.links_with(class: "list-text-indent beta-callout").each do |lonk|
-                        sports << lonk
+                        sports << lonk.click.uri
                         # puts lonk
                         
                     end
                 else
-                    sports << link
+                    sports << link.click.uri
                     # puts link
                 end
             end
         end
-        
-        sport_pages = get_link(sports)
-        
-        
-        return sport_pages
+        # pp sports
+        return sports
     end
     
     
-    def get_matches(sport_pages)
+    def get_matches(sport)
         matches = []
-        good_matches = []
-        sport_pages.each do |sport|
-            # byebug
-            # puts sport.uri
-            if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
-                if sport.search('td.bet-headers').at('td:contains("Draw")')
-                    # puts "Draw possible, no bet"
-                    # pp sport.uri
-                else
-                    
-                    # puts sport.uri
-                    # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
-                    sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
-                        good_matches << temp.click
-                        # pp temp.click.uri
-                    end
+        sport = get(sport)
+        if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
+            if sport.search('td.bet-headers').at('td:contains("Draw")')
+                # puts "Draw possible, no bet"
+                # pp sport.uri
+            else
+                
+                # puts sport.uri
+                # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
+                sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
+                    matches << temp.click.uri
+                    # pp temp.click.uri
                 end
                 
                 
             end
             
+            return matches
+            
         end
-        matches = get_link(good_matches)
-        return matches
+        
     end
     
     
