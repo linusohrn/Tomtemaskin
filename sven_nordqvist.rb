@@ -21,32 +21,50 @@ class Sven_Nordqvist
     end
     
     
-    def update_pages_loop(sports)
+    def update_loop
         while @running
             puts "looped"
             sleep(3600)
-            update_pages(sports)
+            startup()
         end
     end
     
     def startup
-        update_pages(@spider.get_good_links())
+        update_sports()
+        update_loop()
+    end
+
+    def update_sports
+        sports = @spider.get_good_links
+        sports.each do |sport|
+            update_pages(sport)
+            sleep(0.03)
+        end
     end
     
     
-    def update_pages(sports)
-        matches = []
-        odds = {}
-        sports.each do |sport|
-            matches << @spider.get_matches(sport)
-            sleep(0.03)
+    def update_pages(sport)
+        matches = @spider.get_matches(sport)
+        update_matches(matches)
+    end
+
+    def update_matches(matches)
+        
+        odds={}
+        if !matches.nil?
+            matches.each do |match|
+                
+                results = update_odds(match)
+                odds[results[0]] = results[1]
+                sleep(0.03)
+            end
         end
-        matches.each do |match|
-            results = @collector.get_odds(match)
-            odds[results[0]] = results[1]
-            sleep(0.03)
-        end
-        update_pages_loop(sports)
+    end
+
+    def update_odds(match)
+        
+        return (@collector.get_odds(match))
+        
     end
     
 end

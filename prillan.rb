@@ -10,24 +10,23 @@ class Prillan < Mechanize
     end
     
     def get_odds(match)
-        odds = {}
+        match = get(match)
         temp_arr = []
         odds_arr = []
-        # match = get(match)
         match.search('td.bc.bs').each do |odd|
             temp_arr << odd.children.text
         end 
         long = (temp_arr.length / 2)
-        
         if long > 1
             temp_arr.each_slice(long) {|temp|
             odds_arr << temp}
             if !odds_arr.nil?
-                odds_arr
                 add_odds_db(match.uri, odds_arr)
             end
         end
-        return match, odds
+        
+        return match.uri, odds_arr
+        
     end
     
     
