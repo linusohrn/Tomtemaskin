@@ -30,15 +30,22 @@ class Sven_Nordqvist
     end
     
     def startup
-        sports = @spider.get_good_links
-        update_pages(sports)
+        update_pages(@spider.get_good_links())
     end
     
     
     def update_pages(sports)
-        
-        matches = @spider.get_matches(sports)
-        odds = @collector.get_odds(matches)
+        matches = []
+        odds = {}
+        sports.each do |sport|
+            matches << @spider.get_matches(sport)
+            sleep(0.03)
+        end
+        matches.each do |match|
+            results = @collector.get_odds(match)
+            odds[results[0]] = results[1]
+            sleep(0.03)
+        end
         update_pages_loop(sports)
     end
     

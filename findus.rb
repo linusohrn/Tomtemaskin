@@ -9,7 +9,7 @@ class Findus < Mechanize
         @gumman = Gumman.new
         @page = self.get('https://oddschecker.com/')
     end
-
+    
     def get_link(list)
         list_links = []
         list.each do |temp_link|
@@ -46,40 +46,33 @@ class Findus < Mechanize
             end
         end
         
-        sport_pages = get_link(sports)
-        
-        
-        return sport_pages
+        return sports
     end
     
     
-    def get_matches(sport_pages)
+    def get_matches(sport)
         matches = []
-        good_matches = []
-        sport_pages.each do |sport|
-            # byebug
-            # puts sport.uri
-            if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
-                if sport.search('td.bet-headers').at('td:contains("Draw")')
-                    # puts "Draw possible, no bet"
-                    # pp sport.uri
-                else
-                    
-                    # puts sport.uri
-                    # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
-                    sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
-                        good_matches << temp.click
-                        # pp temp.click.uri
-                    end
+        sport = get(sport.uri)
+        if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
+            if sport.search('td.bet-headers').at('td:contains("Draw")')
+                # puts "Draw possible, no bet"
+                # pp sport.uri
+            else
+                
+                # puts sport.uri
+                # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
+                sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
+                    matches << temp.click
+                    # pp temp.click.uri
                 end
-                
-                
             end
             
+            
+            return matches
         end
-        matches = get_link(good_matches)
-        return matches
+        
     end
     
-    
 end
+
+
