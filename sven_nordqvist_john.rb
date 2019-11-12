@@ -23,22 +23,22 @@ class Sven_Nordqvist
     end
     
     
-    def update_pages_loop(sports)
+    def update_pages_loop()
         while @running
             puts "looped"
             sleep(3600)
-            update_pages(sports)
+            update_sports
         end
     end
     
     def startup
         odds = update_sports()
-        update_loop()
+        update_pages_loop()
     end
 
     def update_sports
-        sports = @spider.get_good_links
-        sports.each do |sport|
+        @sports = @spider.get_good_links
+        @sports.each do |sport|
             update_pages(sport)
             sleep(0.03)
         end
@@ -46,7 +46,7 @@ class Sven_Nordqvist
     
     
     def update_pages(sports)
-        matches = @spider.get_matches(sport)
+        matches = @spider.get_matches(sports)
         update_matches(matches)
     end
 
@@ -61,10 +61,13 @@ class Sven_Nordqvist
                 sleep(0.03)
             end
         end
-        # puts odds
+        puts odds
         # arbitrage_odds = @calculator.get_arbitrage_odds(odds)
         # puts arbitrage_odds
-        # puts "sport finished"
+        if odds = {}
+            puts "bad sport"
+        else
+        puts "good sport"
     end
 
     def update_odds(match)
@@ -76,4 +79,3 @@ class Sven_Nordqvist
 end
 
 Sven_Nordqvist.new
-
