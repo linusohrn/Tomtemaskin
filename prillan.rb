@@ -17,7 +17,6 @@ class Prillan < Mechanize
             temp_arr << odd.children.text
         end 
         long = (temp_arr.length / 2)
-
         if long > 1
             temp_arr.each_slice(long) {|temp|
             odds_arr << temp}
@@ -30,9 +29,9 @@ class Prillan < Mechanize
         
     end
     
+    
     def add_odds_db(match,odds)        
         @gumman.add_odds_db(match,odds)
     end
-    
     
 end

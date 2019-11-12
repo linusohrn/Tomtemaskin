@@ -23,16 +23,16 @@ class Sven_Nordqvist
     end
     
     
-    def update_pages_loop(sports)
+    def update_loop
         while @running
             puts "looped"
             sleep(3600)
-            update_pages(sports)
+            startup()
         end
     end
     
     def startup
-        odds = update_sports()
+        update_sports()
         update_loop()
     end
 
@@ -45,7 +45,7 @@ class Sven_Nordqvist
     end
     
     
-    def update_pages(sports)
+    def update_pages(sport)
         matches = @spider.get_matches(sport)
         update_matches(matches)
     end
