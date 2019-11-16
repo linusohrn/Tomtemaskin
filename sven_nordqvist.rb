@@ -58,13 +58,14 @@ class Sven_Nordqvist
                 
                 results = update_odds(match)
                 odds[results[0]] = results[1]
+                p odds[results[0]]
                 sleep(0.03)
             end
         end
         # puts odds
         arbitrage_odds = @calculator.get_arbitrage_odds(odds)
-        puts arbitrage_odds
-        puts "sport finished"
+        # puts arbitrage_odds
+        # puts "sport finished"
     end
 
     def update_odds(match)

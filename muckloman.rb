@@ -16,7 +16,7 @@ class Muckloman < Mechanize
         odds.each do |key, value|
             odds_and_bets_collection = []
             # puts "Key:" + key.to_ss
-            puts "Value:" + value.to_s
+            # puts "Value:" + value.to_s
             duplicate_check1 = []
 
             if value[0] != nil
