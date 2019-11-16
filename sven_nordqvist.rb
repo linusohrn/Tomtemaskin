@@ -62,9 +62,9 @@ class Sven_Nordqvist
             end
         end
         # puts odds
-        # arbitrage_odds = @calculator.get_arbitrage_odds(odds)
-        # puts arbitrage_odds
-        # puts "sport finished"
+        arbitrage_odds = @calculator.get_arbitrage_odds(odds)
+        puts arbitrage_odds
+        puts "sport finished"
     end
 
     def update_odds(match)

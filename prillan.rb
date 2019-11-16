@@ -14,7 +14,21 @@ class Prillan < Mechanize
         temp_arr = []
         odds_arr = []
         match.search('td.bc.bs').each do |odd|
-            temp_arr << odd.children.text
+            
+            # Remove whitespace
+            odd_children = odd.children.text.gsub(/\s+/, "")
+
+            if odd_children.empty? == false
+
+                # Make into fraction
+                if odd_children.include?("/") == false
+                    odd_children+="/1"
+                end
+
+                temp_arr << odd_children
+            
+            end
+
         end 
         long = (temp_arr.length / 2)
         if long > 1
