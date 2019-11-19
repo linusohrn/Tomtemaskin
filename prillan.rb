@@ -13,31 +13,35 @@ class Prillan < Mechanize
         match = get(match)
         temp_arr = []
         odds_arr = []
-        if match.search('tr.andicap-participant').length <= 2
-            match.search('td.bc.bs').each do |odd|
-                
-                # Remove whitespace
-                odd_children = odd.children.text.gsub(/\s+/, "")
-                
-                if odd_children.empty? == false
+        if !match.nil?
+            if match.search('tr.evTabRow').length == 2
+                match.search('td.bc.bs').each do |odd|
                     
-                    # Make into fraction
-                    if odd_children.include?("/") == false
-                        odd_children+="/1"
+                    # Remove whitespace
+                    odd_children = odd.children.text.gsub(/\s+/, "")
+                    
+                    if odd_children.empty? == false
+                        
+                        # Make into fraction
+                        if !odd_children.include?("/")
+                            odd_children+="/1"
+                        end
+                        
+                        temp_arr << odd_children
+                        
+                        
                     end
-                    
-                    temp_arr << odd_children
-                    
-                    
                 end
-            end
-            
-            long = (temp_arr.length / 2)
-            if long > 1
-                temp_i = 0
-                if temp_arr.length%2==0
-                    odds_arr << temp_arr.pop(long)
-                    odds_arr << temp_arr
+                
+                long = (temp_arr.length / 2)
+                if long > 1
+                    if temp_arr.length%2!=0
+                        temp_arr.pop(1) 
+                        
+                        odds_arr << temp_arr
+                    else
+                        odds_arr << temp_arr
+                    end
                 end
                 
                 if odds_arr.length > 1
@@ -49,6 +53,8 @@ class Prillan < Mechanize
             
         end  
     end
+    
+    
     
     
     def add_odds_db(match,odds)        

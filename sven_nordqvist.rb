@@ -55,10 +55,8 @@ class Sven_Nordqvist
         odds={}
         if !matches.nil?
             matches.each do |match|
-                
                 results = update_odds(match)
                 odds[results[0]] = results[1]
-                p odds[results[0]]
                 sleep(0.03)
             end
         end

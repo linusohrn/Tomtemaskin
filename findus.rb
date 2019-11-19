@@ -52,16 +52,20 @@ class Findus < Mechanize
                 # puts sport.uri
                 # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
                 sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
-                    matches << temp.click.uri
-                    # pp temp.click.uri
+                    if !temp.click.nil?
+                        matches << temp.click.uri
+                        # pp temp.click.uri
+                    end
                 end
                 
                 
                 # puts sport.uri
                 # puts sport.links_with(class: "beta-callout full-height-link whole-row-link")
                 sport.links_with(class: "beta-callout full-height-link whole-row-link").each do |temp|
-                    matches << temp.click
-                    # pp temp.click.uri
+                    if !temp.click.nil?
+                        matches << temp.click
+                        # pp temp.click.uri
+                    end
                 end
             end
             
