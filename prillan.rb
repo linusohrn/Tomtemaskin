@@ -13,6 +13,7 @@ class Prillan < Mechanize
         match = get(match)
         temp_arr = []
         odds_arr = []
+        puts match.uri
         if !match.nil?
             if match.search('tr.evTabRow').length == 2
                 match.search('td.bc.bs').each do |odd|

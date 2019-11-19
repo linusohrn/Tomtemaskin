@@ -30,6 +30,7 @@ class Findus < Mechanize
                         
                     end
                 else
+                    puts link.click.uri
                     sports << link.click.uri
                     # puts link
                 end
