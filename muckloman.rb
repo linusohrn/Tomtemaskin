@@ -18,7 +18,8 @@ class Muckloman < Mechanize
             # puts "Key:" + key.to_ss
             # puts "Value:" + value.to_s
             duplicate_check1 = []
-
+            p key
+            p value
             if value[0] != nil
             value[0].each do |odds_team1|
                 odds_and_bets = []
@@ -27,7 +28,6 @@ class Muckloman < Mechanize
                 
                     duplicate_check1 << odds_team1
                     duplicate_check2 = []
-
                     value[1].each do |odds_team2|
                         if duplicate_check2.include?(odds_team2) == false
                             
