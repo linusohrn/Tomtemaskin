@@ -7,13 +7,8 @@ class Findus < Mechanize
     
     def initialize
         super
-        @gumman = Gumman.connec()
+        Gumman.connect()
         @page = self.get('https://oddschecker.com/')
-    end
-    
-    
-    def add_fetch_db(link, deltatime)
-        @gumman.add_fetch_db(link, deltatime)
     end
     
     def get_good_links
@@ -46,7 +41,6 @@ class Findus < Mechanize
         time = Time.now
         sport = get(sport)
         deltatime = Time.now - time
-        add_fetch_db(sport.uri, deltatime)
         if sport.links_with(class: "beta-callout full-height-link whole-row-link").empty? == false
             if sport.search('td.bet-headers').at('td:contains("Draw")')
                 # puts "Draw possible, no bet"
@@ -73,6 +67,7 @@ class Findus < Mechanize
                 end
             end
             
+            Gumman.add_fetch_db(sport, deltatime)
             return matches
             
         end
@@ -81,7 +76,6 @@ class Findus < Mechanize
     
     def get_odds(match)
         match = get(match)
-        add_fetch_db(match.uri)
         temp_arr = []
         odds_arr = []
         # puts match.uri
@@ -122,11 +116,8 @@ class Findus < Mechanize
                     
                 end
                 
-                if odds_arr.length > 1
-                    add_odds_db(match.uri, odds_arr)
-                end
             end
-            p odds_arr
+            
             return match.uri, odds_arr
             
         end  

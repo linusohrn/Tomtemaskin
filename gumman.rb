@@ -9,7 +9,7 @@ class Gumman
     end
 
     def self.add_fetch_db(link, deltatime)
-        @db.execute('INSERT INTO fetches, time, response (link,) VALUES (?)', link.to_s)
+        @db.execute('INSERT INTO fetches (link, response) VALUES (?,?)', link.to_s, deltatime.to_s)
     end
 
 
@@ -42,7 +42,10 @@ class Gumman
         db_temp.execute('CREATE TABLE "odds" (
             "match"	TEXT NOT NULL,
             "team1"	TEXT NOT NULL,
-            "team2"	TEXT NOT NULL
+            "team2"	TEXT NOT NULL,
+            "arbitrage" INT NOT NULL,
+            "aritrage_odds" TEXT,
+            "time" TEXT NOT NULL
         );')
     
     end

@@ -17,7 +17,7 @@ class Sven_Nordqvist
         system("cls")
         @spider = Findus.new
         @calculator = Muckloman.new
-        Gumman.new.db_setup()
+        Gumman.db_setup()
         startup()
     end
     

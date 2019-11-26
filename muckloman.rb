@@ -6,7 +6,7 @@ require 'pp'
 # 
 class Muckloman < Mechanize
     def initialize
-        @gumman = Gumman.connec()
+        Gumman.connect()
         super
     end
     
@@ -76,13 +76,11 @@ class Muckloman < Mechanize
         # print "\n"
         # puts hash
         # print "\n"
-        @gumman.add_odds_db(
+        # @gumman.add_odds_db(
         return hash
 
     end
 end
-
-Muckloman.new
 
 # 
 # EXEMPELDATA
