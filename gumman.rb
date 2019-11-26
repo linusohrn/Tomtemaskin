@@ -4,16 +4,16 @@ require 'sqlite3'
 #   
 class Gumman
 
-    def initialize
+    def self.connect
         @db = SQLite3::Database.new('db/data.db')
     end
 
-    def add_fetch_db(link)
-        @db.execute('INSERT INTO fetches (link) VALUES (?)', link.to_s)
+    def self.add_fetch_db(link, deltatime)
+        @db.execute('INSERT INTO fetches, time, response (link,) VALUES (?)', link.to_s)
     end
 
 
-    def add_odds_db(match,odds)
+    def self.add_odds_db(match,odds)
         team1 = ""
         team2 = ""
         odds[0].each do |t1o|
@@ -25,7 +25,7 @@ class Gumman
         @db.execute('INSERT INTO odds (match, team1, team2) VALUES (?,?,?)', match.to_s, team1, team2)
     end
 
-    def db_setup()
+    def self.db_setup()
 
         db_temp = SQLite3::Database.new('db/data.db')
 
@@ -35,7 +35,8 @@ class Gumman
 
         db_temp.execute('CREATE TABLE "fetches" (
             "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-            "link"	TEXT NOT NULL
+            "link"	TEXT NOT NULL,
+            "response" TEXT NOT NULL
         );')
 
         db_temp.execute('CREATE TABLE "odds" (
