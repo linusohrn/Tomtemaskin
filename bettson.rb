@@ -25,15 +25,18 @@ class Bettson < Mechanize
     
     end
     
-    
-    def stuff(arb_odds)
-        
-        i = 0
-        arb_odds.each do |match|
-            # usch fyfan vad jag hatar det allt jag har skrivit här
-            url = match.values[0]
-            page = self.get(url)
 
+    def handle_data(arb_odds)
+
+        handled_total_data = []
+        
+        i = 1
+        arb_odds.each do |match|
+
+            
+            location = match[:link]
+            page = self.get(location)
+            
             odds_and_bet = match.values[1]
             odds = []
             bets = []   
@@ -44,43 +47,43 @@ class Bettson < Mechanize
                         odds.push(thingy3[0])
                         bets.push(thingy3[1])
                     end
-                end            
-            end
-            
-            # Här sker skit för varje match
-            
-            odds.each do |odd|
+                end 
                 
-                if page.search(odd) != nil
-                    puts "Found #{odd}"
-                end
+                
+                handled_match_data = {:matchnr => i,
+                                    :location => location,
+                                    :odds => odds,
+                                    :bets => bets}
+
+                handled_total_data.push(handled_match_data)
+                
+                puts ""
+                puts "Match #{i}:"
+                puts "Location: #{location}"
+                puts "Odds: #{odds}"
+                puts "Bets: #{bets}"
+                puts ""
+                puts "Added Match #{i} to handled_total_data"
+                puts "------------------------------------"
+
+
+
+
+                i += 1
             end
-
-
-            #TODO: hitta sätt att associera givet odd med sida den kommer från
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            
-            # puts i
-            # puts "----------------------------------"
-
-
 
         end
+    end
+
+    
+    def main(arb_odds)
+        handle_data(arb_odds)
+
 
 
     end
 
 end
 
-# p test_odds[0].values[1][0][0][0][0]
-
 @better = Bettson.new
-@better.stuff(test_odds)
+@better.main(test_odds)
