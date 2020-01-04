@@ -13,16 +13,29 @@ class Gumman
     end
 
 
-    def self.add_odds_db(match,odds)
+    # def self.add_odds_db(match,odds)
+    #     team1 = ""
+    #     team2 = ""
+    #     odds[0].each do |t1o|
+    #         team1 += "#{t1o.to_s}, "
+    #     end
+    #     odds[1].each do |t2o|
+    #         team2 += "#{t2o.to_s}, "
+    #     end
+        
+    #     @db.execute('INSERT INTO odds (match, team1, team2) VALUES (?,?,?)', match.to_s, team1, team2)
+    # end
+
+    def self.add_arbitrage_odds_db(match, arbitrage_odds)
         team1 = ""
         team2 = ""
-        odds[0].each do |t1o|
-            team1 += "#{t1o.to_s}, "
+        arbitrage_odds.each do |opp|
+            team1 += "#{arbitrage_odds[opp][0][0].to_s}, "
+            team2 += "#{arbitrage_odds[opp][0][1].to_s}, "
+            market_margin += "#{arbitrage_odds[opp][1]}"
         end
-        odds[1].each do |t2o|
-            team2 += "#{t2o.to_s}, "
-        end
-        @db.execute('INSERT INTO odds (match, team1, team2) VALUES (?,?,?)', match.to_s, team1, team2)
+        
+        @db.execute('INSERT INTO odds (match, team1, team2, market_margin) VALUES (?,?,?)', match.to_s, team1, team2, market_margin)
     end
 
     def self.db_setup()
@@ -44,7 +57,7 @@ class Gumman
             "team1"	TEXT NOT NULL,
             "team2"	TEXT NOT NULL,
             "arbitrage" INT NOT NULL,
-            "aritrage_odds" TEXT,
+            "arbitrage_odds" TEXT,
             "time" TEXT NOT NULL
         );')
     

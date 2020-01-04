@@ -34,15 +34,15 @@ class Muckloman < Mechanize
                             
                             duplicate_check2 << odds_team2
                             
-                            market_margin = (((1.0/Rational(odds_team1))*100)+((1.0/Rational(odds_team2))*100))  
+                            market_margin = (((1.0/Rational(odds_team1))*100)+((1.0/Rational(odds_team2))*100)).round(2)   
                             
                             puts "Game: " + key.to_s
                             puts "Odds: " + odds_team1.to_s + ", " + odds_team2.to_s           
 
                             if market_margin < 100
                                 puts "Arbitrage oppurtunity:"
-                                puts key.to_s + " with " + odds_team1.to_s + " and " + odds_team2.to_s 
-                                puts "Market margin: " + market_margin.round(2).to_s + " %"
+                                puts key.to_s + " with " + odds_team1.to_s + " and " + odds_team2.to_s
+                                puts "Market margin: " + market_margin.to_s + " %"
                                 puts "Om du ska satsa 100 kr:"
                                 
                                 implied_prob_1 = (1/(Rational(odds_team1)) * 100).to_f
@@ -56,6 +56,7 @@ class Muckloman < Mechanize
                                 
                                 odds_and_bets << [odds_team1, bet_1]
                                 odds_and_bets << [odds_team2, bet_2]
+                                odds_and_bets << market_margin
                             end
                         end
                     end
@@ -69,8 +70,10 @@ class Muckloman < Mechanize
             end
             if odds_and_bets_collection != []
                 hash[key] = odds_and_bets_collection 
+                p key
+                p odds_and_bets_collection
+                @gumman.add_arbitrage_odds_db(key, odds_and_bets_collection)
             end
-    
         end  
 
         # print "\n"
