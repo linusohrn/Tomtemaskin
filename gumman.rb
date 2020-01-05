@@ -12,30 +12,20 @@ class Gumman
         @db.execute('INSERT INTO fetches (link, response) VALUES (?,?)', link.to_s, deltatime.to_s)
     end
 
-
-    # def self.add_odds_db(match,odds)
-    #     team1 = ""
-    #     team2 = ""
-    #     odds[0].each do |t1o|
-    #         team1 += "#{t1o.to_s}, "
-    #     end
-    #     odds[1].each do |t2o|
-    #         team2 += "#{t2o.to_s}, "
-    #     end
-        
-    #     @db.execute('INSERT INTO odds (match, team1, team2) VALUES (?,?,?)', match.to_s, team1, team2)
-    # end
-
     def self.add_arbitrage_odds_db(match, arbitrage_odds)
-        team1 = ""
-        team2 = ""
-        arbitrage_odds.each do |opp|
-            team1 += "#{arbitrage_odds[opp][0][0].to_s}, "
-            team2 += "#{arbitrage_odds[opp][0][1].to_s}, "
-            market_margin += "#{arbitrage_odds[opp][1]}"
+        match = match.to_s
+        sport = match.slice(28,match.length).split('/')[0]
+        i=0
+        arbitrage_odds.each do 
+            team1_odds = "#{arbitrage_odds[i][0][0].to_s}"
+            team2_odds = "#{arbitrage_odds[i][1][0].to_s}"
+            team1_bet = "#{arbitrage_odds[i][0][1].to_s}"
+            team2_bet = "#{arbitrage_odds[i][1][1].to_s}" 
+            market_margin = "#{arbitrage_odds[i][2]}%"
+            i += 1
+            @db.execute('INSERT INTO odds (match, team1_odds, team2_odds, team1_bet, team2_bet, market_margin, sport) VALUES (?,?,?,?,?,?,?)', match, team1_odds, team2_odds, team1_bet, team2_bet, market_margin, sport)
         end
         
-        @db.execute('INSERT INTO odds (match, team1, team2, market_margin) VALUES (?,?,?)', match.to_s, team1, team2, market_margin)
     end
 
     def self.db_setup()
@@ -54,11 +44,12 @@ class Gumman
 
         db_temp.execute('CREATE TABLE "odds" (
             "match"	TEXT NOT NULL,
-            "team1"	TEXT NOT NULL,
-            "team2"	TEXT NOT NULL,
-            "arbitrage" INT NOT NULL,
-            "arbitrage_odds" TEXT,
-            "time" TEXT NOT NULL
+            "team1_odds" TEXT NOT NULL,
+            "team2_odds" TEXT NOT NULL,
+            "team1_bet" INT NOT NULL,
+            "team2_bet" INT NOT NULL,
+            "market_margin" TEXT NOT NULL,
+            "sport" TEXT NOT NULL
         );')
     
     end
