@@ -16,9 +16,8 @@ class Sven_Nordqvist
         @running = true
         system("cls")
         @spider = Findus.new
-        @collector = Prillan.new
         @calculator = Muckloman.new
-        Gumman.new.db_setup()
+        Gumman.db_setup()
         startup()
     end
     
@@ -26,19 +25,20 @@ class Sven_Nordqvist
     def update_loop
         while @running
             puts "looped"
+            puts "Took #{Time.now - @starttime}"
             sleep(3600)
             startup()
         end
     end
     
     def startup
+        @starttime = Time.now
         update_sports()
         update_loop()
     end
 
-    def update_sports
-        sports = @spider.get_good_links
-        sports.each do |sport|
+    def update_sports 
+        @spider.get_good_links.each do |sport|
             update_pages(sport)
             sleep(0.03)
         end
@@ -46,8 +46,7 @@ class Sven_Nordqvist
     
     
     def update_pages(sport)
-        matches = @spider.get_matches(sport)
-        update_matches(matches)
+        update_matches(@spider.get_matches(sport))
     end
 
     def update_matches(matches)
@@ -55,10 +54,8 @@ class Sven_Nordqvist
         odds={}
         if !matches.nil?
             matches.each do |match|
-                
                 results = update_odds(match)
                 odds[results[0]] = results[1]
-                p odds[results[0]]
                 sleep(0.03)
             end
         end
@@ -70,7 +67,7 @@ class Sven_Nordqvist
 
     def update_odds(match)
         
-        return (@collector.get_odds(match))
+        return (@spider.get_odds(match))
         
     end
     
