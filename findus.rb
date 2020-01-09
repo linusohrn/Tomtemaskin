@@ -67,7 +67,7 @@ class Findus < Mechanize
                 end
             end
             
-            # Gumman.add_fetch_db(sport, deltatime)
+            Gumman.add_fetch_db(sport, deltatime)
             return matches
             
         end
