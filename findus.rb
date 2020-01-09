@@ -76,50 +76,48 @@ class Findus < Mechanize
     
     def get_odds(match)
         match = get(match)
-        temp_arr = []
+        # pp match.uri
+        
         odds_arr = []
         # puts match.uri
         if !match.nil?
+            # pp match.uri
             if match.search('tr.evTabRow').length == 2
-                match.search('tr.evTabRow/td.bc.bs').each do |odd|
-                    
-                    # Remove whitespace
-                    odd_children = odd.children.text.gsub(/\s+/, "")
-                    
-                    if odd_children.empty? == false
+                teams = match.search('tr.evTabRow')
+                teams.each do |team|
+                    temp_arr = []
+                    team.search('td.bc.bs').each do |odd|
+                        # pp odd
+                        # Remove whitespace
+                        odd_children = odd.children.text.gsub(/\s+/, "")
                         
-                        # Make into fraction
-                        if !odd_children.include?("/")
-                            odd_children+="/1"
+                        if !odd_children.empty?
+
+                            # Make into fraction
+                            if !odd_children.include?("/")
+                                odd_children+="/1"
+                            end
+                            # pp odd_children
+                            temp_arr << odd_children
+                            # pp odd_children
+                            
                         end
-                        
-                        temp_arr << odd_children
-                        
-                        
                     end
+                    odds_arr << temp_arr
                 end
                 
-                long = (temp_arr.length / 2)
-                if long > 1
-                    temp_arr = temp_arr.each_slice(long)
-                    temp_arr.each do |temp|
-                        
-                        if temp.length%2!=0
-                            temp.pop(1) 
-                            
-                            odds_arr << temp
-                        else
-                            odds_arr << temp
-                        end
-                    end
-                    
-                    
-                end
                 
             end
-            pp match.uri
-            pp odds_arr
-            return match.uri, odds_arr
+            # pp match.uri
+            # pp odds_arr.length
+            if odds_arr.length < 2
+                # pp odds_arr
+                odds_arr = odds_arr.first
+            end
+            # pp odds_arr
+            if !odds_arr.nil? && !odds_arr.empty?
+                return match.uri, odds_arr
+            end 
             
         end  
     end 

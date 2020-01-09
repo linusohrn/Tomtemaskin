@@ -1,5 +1,4 @@
 source 'https://rubygems.org'
-require 'rubygems'
-require 'nokogiri'
-require 'byebug'
-require 'mechanize'
+gem 'nokogiri'
+gem 'byebug'
+gem 'mechanize'
