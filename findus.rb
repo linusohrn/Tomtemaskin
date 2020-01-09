@@ -117,7 +117,8 @@ class Findus < Mechanize
                 end
                 
             end
-            
+            pp match.uri
+            pp odds_arr
             return match.uri, odds_arr
             
         end  
