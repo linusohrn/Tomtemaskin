@@ -36,7 +36,7 @@ class Sven_Nordqvist
         update_sports()
         update_loop()
     end
-
+    
     def update_sports 
         @spider.get_good_links.each do |sport|
             update_pages(sport)
@@ -48,23 +48,25 @@ class Sven_Nordqvist
     def update_pages(sport)
         update_matches(@spider.get_matches(sport))
     end
-
+    
     def update_matches(matches)
         
         odds={}
         if !matches.nil?
             matches.each do |match|
                 results = update_odds(match)
-                odds[results[0]] = results[1]
-                sleep(0.03)
+                # pp results
+                if !results.nil? && !results.empty?
+                    arbitrage_odds = @calculator.get_arbitrage_odds(results[0], results[1])
+                    # puts arbitrage_odds
+                    # puts "sport finished"
+                end
+                sleep(0.035)
             end
         end
-        # puts odds
-        arbitrage_odds = @calculator.get_arbitrage_odds(odds)
-        # puts arbitrage_odds
-        # puts "sport finished"
-    end
 
+    end
+    
     def update_odds(match)
         
         return (@spider.get_odds(match))
