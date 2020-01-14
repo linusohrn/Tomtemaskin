@@ -11,7 +11,7 @@ test_odds = [
 ]
 
 class Bettson < Mechanize
-
+    attr_reader :wallet
     def initialize
         Gumman.connect()
         super

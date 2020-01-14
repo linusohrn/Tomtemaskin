@@ -1,16 +1,19 @@
 require_relative 'gumman.rb'
+require_relative 'prillan.rb'
 require 'mechanize'
 require 'pp'
 # Calculator
 # Jämför odds med varandra och beräknar optimalt sätt att satsa pengar
 # 
 class Muckloman < Mechanize
+
     def initialize
         Gumman.connect()
         super
     end
     
-    def get_arbitrage_odds(match, odds)
+    def get_arbitrage_odds(match, odds, wallet)
+        odds_out ||= {}
         odds[0].each do |odds_team1|
             odds_and_bets = []
             # pp odds_team1
@@ -41,8 +44,8 @@ class Muckloman < Mechanize
                             implied_prob_1 = (1/(Rational(odds_team1)) * 100).to_f
                             implied_prob_2 = (1/(Rational(odds_team2)) * 100).to_f
                             
-                            bet_1 = ((100*implied_prob_1)/market_margin).round(2)
-                            bet_2 = ((100*implied_prob_2)/market_margin).round(2)
+                            bet_1 = ((wallet*implied_prob_1)/market_margin).round(2)
+                            bet_2 = ((wallet*implied_prob_2)/market_margin).round(2)
                             
                             puts odds_team1.to_s + ": " + bet_1.to_s + " kr"
                             puts odds_team2.to_s + ": " + bet_2.to_s + " kr"
@@ -63,14 +66,16 @@ class Muckloman < Mechanize
             
             if odds_and_bets != []
                 odds_and_bets_collection << odds_and_bets
+                # pp odds_and_bets
             end
             
             if odds_and_bets_collection != []
                 # pp match
+                pp odds_and_bets_collection
+                
                 # p hash
-                hash = {}
                 # pp odds_and_bets_collection
-                hash[match] = odds_and_bets_collection 
+                odds_out[match] = odds_and_bets_collection 
                 
                 Gumman.add_arbitrage_odds_db(match, odds_and_bets_collection[0])
             end
@@ -79,8 +84,10 @@ class Muckloman < Mechanize
         # print "\n"
         # puts hash
         # print "\n"
+        if !odds_out.nil? && !odds_out.empty? 
+            return odds_out
+        end
         # @gumman.add_odds_db(
-        return hash
         
     end
 end
@@ -100,5 +107,12 @@ end
 # {LÄNK=>[[[ODDS1], [ODDS2]], [[ODDS1], [ODDS2]]]}
 # {#<URI::HTTPS https://www.oddschecker.com/snooker/northern-ireland-open/scott-donaldson-v-alfie-burden/winner>=>[[["22/10", 47.37], ["198/100", 52.63]], [["23/10", 46.26], ["198/100", 53.74]]]}
 #
+# 
+# 
+# 
+# 
+# 
+# !!!NOT RELEVANT!!!
+# 
 # LÅNG HASH
 # {#<URI::HTTPS https://www.oddschecker.com/golf/tournament-matches-specials/18-hole-matches/robby-shelton-v-harris-english/mythical-2-balls>=>[["23/10", 46.26], ["198/100", 53.74]], #<URI::HTTPS https://www.oddschecker.com/golf/tournament-matches-specials/18-hole-matches/robby-shelton-v-harris-english/mythical-2-balls>=>[["23/10", 46.26], ["198/100", 53.74]]}
