@@ -2,29 +2,21 @@ require_relative 'gumman.rb'
 require 'mechanize'
 require 'pp'
 require 'byebug'
+require 'nikkou'
+require 'open-uri'
 
-old_test_odds = [
-{:link=>"https://www.oddschecker.com/golf/tournament-matches-specials/18-hole-matches/robby-shelton-v-harris-english/mythical-2-balls", :odds=>[[[["23/10", 46.26], ["198/100", 53.74]], [["21/10", 46.26], ["197/100", 53.71]]]]},
-{:link=>"https://www.oddschecker.com/football/english/fa-cup/solihull-moors-v-rotherham/winner", :odds=>[[[["24/10", 46.27], ["199/100", 53.33]], [["27/10", 46.3]]]]}
-]
-
-new_test_odds = [
-    {:link=>"https://www.oddschecker.com/football/france/ligue-1/dijon-v-metz/winner", :odds=>[[[["6/5", 46.26], ["13/5", 53.74]], [["14/5", 46.26], ["109/50", 53.71]]]]},
-    {:link=>"https://www.oddschecker.com/football/france/ligue-1/reims-v-lyon/winner", :odds=>[[[["2/5", 46.26], ["21/5", 53.74]], [["5", 46.26]]]]}
+test_odds = [
+    {:link=>"https://www.oddschecker.com/football/english/premier-league/bournemouth-v-watford/winner", :odds=>[[[["1/18", 46.26], ["1/41", 53.74]], [["55/4", 46.26], ["36", 53.71]]]]},
+    {:link=>"https://www.oddschecker.com/football/english/premier-league/watford-v-tottenham/winner", :odds=>[[[["5/2", 46.26], ["13/5", 53.74]], [["12/5", 46.26]]]]}
 ]
 
 class Bettson < Mechanize
-
+    attr_reader :wallet
     def initialize
         Gumman.connect()
         super
     end
     
-    def have_account?(match)
-
-        # TODO: Check if have account
-    
-    end
     
     # Reworks the way the data is processed so it's easier to work in within mechanize.
     def handle_data(arb_odds)
@@ -42,6 +34,7 @@ class Bettson < Mechanize
             odds = []
             bets = []   
             
+            # AAAAAAAAGGGGGGGGHHHHHHHHHHHHH
             odds_and_bet.each do |thingy|
                 thingy.each do |thingy2|                
                     thingy2.each do |thingy3|
@@ -58,17 +51,6 @@ class Bettson < Mechanize
 
                 handled_total_data.push(handled_match_data)
                 
-                # Test shit might be useful
-
-                # puts ""
-                # puts "Match #{i}:"
-                # puts "Location: #{location}"
-                # puts "Odds: #{odds}"
-                # puts "Bets: #{bets}"
-                # puts ""
-                # puts "Added Match #{i} to handled_total_data"
-                # puts "------------------------------------"
-
                 i += 1
             end
 
@@ -78,34 +60,108 @@ class Bettson < Mechanize
 
     end
 
-    
+
+    def booker_class_profiler(booker_class)
+
+        case booker_class
+
+        when "B3"
+            return "Bet365"
+        when "SK"
+            return "SkyBet"
+        when "LD"
+            return "Ladbrokes"
+        when "WH"
+            return "William Hill"
+        when "MR"
+            return "Marathon Bet"
+        when "FB"
+            return "Betfair Sportsbook"
+        when "VC"
+            return "Bet Victor"
+        when "PP"
+            return "Paddy Power"
+        when "UN"
+            return "Unibet"
+        when "CE"
+            return "Coral"
+        when "FR"
+            return "Betfred"
+        when "WA"
+            return "Betway"
+        when "SA"
+            return "Sport Nation"
+        when "BY"
+            return "Boyle Sports"
+        when "VT"
+            return "VBet"
+        when "OE"
+            return "10Bet"
+        when "SO"
+            return "Sportingbet"
+        when "EE"
+            return "888sport"
+        when "YP"
+            return "MoPlay"
+        when "SX"
+            return "Spreadex"
+        when "RZ"
+            return "Redzone"
+        when "BF"
+            return "Betfair"
+        when "BD"
+            return "Betdaq"
+        when "MA"
+            return "Matchbook"
+        when "MK"
+            return "Smarkets"
+
+        end
+
+    end
+            
     def main(arb_odds)
         handled_total_data = handle_data(arb_odds)
 
+        
         match_nr = 0
         handled_total_data.each do |match|
-            
+
             match = handled_total_data[match_nr]
             match_page = get(match[:location])
-
-            # class: diff-row evTabRow bc
-
-            # No clue how .search works
+            match_page_noko = Nokogiri::HTML(open(match[:location]))
             
             odd_nr= 1
+
+            puts "Match #{match_nr+1}: at #{match[:location]}"
+
             match[:odds].each do |odd|
                 
                 # Currently searches through entire mechanize page object which is quite slow 
                 # TODO: make sure it doesn't do that ^
 
-                puts "#{odd_nr}: #{match_page.body.include?(odd)}"
+                
+                # Attribute name of odds class: "data-o"
+                odd_node = match_page_noko.attr_equals("data-o", odd)
 
-                odd_nr += 1
+                # Could probably be solved better with exceptions
+                if odd_node.length > 0
 
-                #TODO: associate each found odd with booker
+                    # Attribute name of booker class: "data-bk"
+                    booker_class = odd_node.attribute("data-bk").value
+
+                    puts "#{odd_nr}: #{odd} at booker class: #{booker_class}"
+
+                    # Associate booker_class with actual booker
+                    puts booker_class_profiler(booker_class)
+
+
+                    odd_nr += 1
+
+                end
+
 
             end
-
 
             match_nr += 1
             puts "------------------------------"
@@ -115,9 +171,10 @@ class Bettson < Mechanize
 
 
 
+
     end
 
 end
 
 @better = Bettson.new
-@better.main(new_test_odds)
+@better.main(test_odds)

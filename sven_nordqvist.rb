@@ -16,6 +16,7 @@ class Sven_Nordqvist
         @running = true
         system("cls")
         @spider = Findus.new
+        @simulator = Prillan.new
         @calculator = Muckloman.new
         Gumman.db_setup()
         startup()
@@ -32,7 +33,9 @@ class Sven_Nordqvist
     end
     
     def startup
+        
         @starttime = Time.now
+        @simulator.current_balance?
         update_sports()
         update_loop()
     end
@@ -57,14 +60,22 @@ class Sven_Nordqvist
                 results = update_odds(match)
                 # pp results
                 if !results.nil? && !results.empty?
-                    arbitrage_odds = @calculator.get_arbitrage_odds(results[0], results[1])
+                    arbitrage_odds = @calculator.get_arbitrage_odds(results[0], results[1], @simulator.current_balance?)
                     # puts arbitrage_odds
                     # puts "sport finished"
+                    # p @simulator
+                    if !arbitrage_odds.nil? && !arbitrage_odds.empty?
+                        potential = @simulator.calculate_profit(arbitrage_odds)
+                        p potential
+                        @simulator.fake_match(potential)
+                        p @simulator.current_balance?()
+                        @simulator.log()
+                    end
                 end
                 sleep(0.035)
             end
         end
-
+        
     end
     
     def update_odds(match)
