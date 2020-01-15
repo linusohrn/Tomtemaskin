@@ -6,7 +6,6 @@ require 'pp'
 # Jämför odds med varandra och beräknar optimalt sätt att satsa pengar
 # 
 class Muckloman < Mechanize
-
     def initialize
         Gumman.connect()
         super
@@ -66,13 +65,10 @@ class Muckloman < Mechanize
             
             if odds_and_bets != []
                 odds_and_bets_collection << odds_and_bets
-                # pp odds_and_bets
             end
             
             if odds_and_bets_collection != []
                 # pp match
-                pp odds_and_bets_collection
-                
                 # p hash
                 # pp odds_and_bets_collection
                 odds_out[match] = odds_and_bets_collection 
@@ -84,10 +80,10 @@ class Muckloman < Mechanize
         # print "\n"
         # puts hash
         # print "\n"
+        # @gumman.add_odds_db(
         if !odds_out.nil? && !odds_out.empty? 
             return odds_out
         end
-        # @gumman.add_odds_db(
         
     end
 end
@@ -107,12 +103,5 @@ end
 # {LÄNK=>[[[ODDS1], [ODDS2]], [[ODDS1], [ODDS2]]]}
 # {#<URI::HTTPS https://www.oddschecker.com/snooker/northern-ireland-open/scott-donaldson-v-alfie-burden/winner>=>[[["22/10", 47.37], ["198/100", 52.63]], [["23/10", 46.26], ["198/100", 53.74]]]}
 #
-# 
-# 
-# 
-# 
-# 
-# !!!NOT RELEVANT!!!
-# 
 # LÅNG HASH
 # {#<URI::HTTPS https://www.oddschecker.com/golf/tournament-matches-specials/18-hole-matches/robby-shelton-v-harris-english/mythical-2-balls>=>[["23/10", 46.26], ["198/100", 53.74]], #<URI::HTTPS https://www.oddschecker.com/golf/tournament-matches-specials/18-hole-matches/robby-shelton-v-harris-english/mythical-2-balls>=>[["23/10", 46.26], ["198/100", 53.74]]}

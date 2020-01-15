@@ -8,15 +8,25 @@ require 'open-uri'
 test_odds = [
     {:link=>"https://www.oddschecker.com/football/english/premier-league/bournemouth-v-watford/winner", :odds=>[[[["1/18", 46.26], ["1/41", 53.74]], [["55/4", 46.26], ["36", 53.71]]]]},
     {:link=>"https://www.oddschecker.com/football/english/premier-league/watford-v-tottenham/winner", :odds=>[[[["5/2", 46.26], ["13/5", 53.74]], [["12/5", 46.26]]]]}
-]
 
 class Bettson < Mechanize
-    attr_reader :wallet
+
     def initialize
         Gumman.connect()
         super
     end
+
+    def have_account?(match)
+
+        # TODO: Check if have account
     
+    end
+    
+    def have_account?(match)
+
+        # TODO: Check if have account
+    
+    end
     
     # Reworks the way the data is processed so it's easier to work in within mechanize.
     def handle_data(arb_odds)
@@ -51,6 +61,17 @@ class Bettson < Mechanize
 
                 handled_total_data.push(handled_match_data)
                 
+                # Test shit might be useful
+
+                # puts ""
+                # puts "Match #{i}:"
+                # puts "Location: #{location}"
+                # puts "Odds: #{odds}"
+                # puts "Bets: #{bets}"
+                # puts ""
+                # puts "Added Match #{i} to handled_total_data"
+                # puts "------------------------------------"
+
                 i += 1
             end
 
@@ -120,13 +141,14 @@ class Bettson < Mechanize
 
     end
             
+
+    
     def main(arb_odds)
         handled_total_data = handle_data(arb_odds)
 
-        
         match_nr = 0
         handled_total_data.each do |match|
-
+            
             match = handled_total_data[match_nr]
             match_page = get(match[:location])
             match_page_noko = Nokogiri::HTML(open(match[:location]))
@@ -134,13 +156,14 @@ class Bettson < Mechanize
             odd_nr= 1
 
             puts "Match #{match_nr+1}: at #{match[:location]}"
+            # class: diff-row evTabRow bc
 
+            # No clue how .search works
+            
             match[:odds].each do |odd|
                 
                 # Currently searches through entire mechanize page object which is quite slow 
                 # TODO: make sure it doesn't do that ^
-
-                
                 # Attribute name of odds class: "data-o"
                 odd_node = match_page_noko.attr_equals("data-o", odd)
 
@@ -149,19 +172,21 @@ class Bettson < Mechanize
 
                     # Attribute name of booker class: "data-bk"
                     booker_class = odd_node.attribute("data-bk").value
+                puts "#{odd_nr}: #{match_page.body.include?(odd)}"
+                puts "#{odd_nr}: #{odd} at booker class: #{booker_class}"
 
-                    puts "#{odd_nr}: #{odd} at booker class: #{booker_class}"
-
-                    # Associate booker_class with actual booker
-                    puts booker_class_profiler(booker_class)
+                # Associate booker_class with actual booker
+                puts booker_class_profiler(booker_class)
 
 
-                    odd_nr += 1
-
-                end
-
+                odd_nr += 1
 
             end
+
+                #TODO: associate each found odd with booker
+
+            end
+
 
             match_nr += 1
             puts "------------------------------"
@@ -171,10 +196,9 @@ class Bettson < Mechanize
 
 
 
-
     end
 
 end
 
 @better = Bettson.new
-@better.main(test_odds)
+@better.main(new_test_odds)

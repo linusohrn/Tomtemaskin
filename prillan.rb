@@ -7,7 +7,7 @@ class Prillan
         Gumman.connect()
         @wallet ||= 100
     end
-
+    
     
     def fake_match(odds_and_profit)
         team1 = odds_and_profit[0][0].to_r
