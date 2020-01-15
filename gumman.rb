@@ -12,10 +12,6 @@ class Gumman
         @db.execute('INSERT INTO fetches (link, response) VALUES (?,?)', link.to_s, deltatime.to_s)
     end
 
-    def self.log_balance(time, balance)
-        @db.execute('INSERT INTO wallet (time, balance) VALUES (?,?)', time, balance)
-    end
-
     def self.add_arbitrage_odds_db(match, arbitrage_odds)
         match = match.to_s
         sport = match.slice(28,match.length).split('/')[0]
@@ -58,8 +54,6 @@ class Gumman
             "market_margin" TEXT NOT NULL,
             "sport" TEXT NOT NULL
         );')
-
-        db_temp.execute('CREATE TABLE "wallet" ("time" TEXT NOT NULL, "balance" INT NOT NULL);')
     
     end
 

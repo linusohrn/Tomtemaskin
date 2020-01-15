@@ -2,8 +2,6 @@ require_relative 'gumman.rb'
 require 'mechanize'
 require 'pp'
 require 'byebug'
-require 'nikkou'
-require 'open-uri'
 
 test_odds = [
     {:link=>"https://www.oddschecker.com/football/english/premier-league/bournemouth-v-watford/winner", :odds=>[[[["1/18", 46.26], ["1/41", 53.74]], [["55/4", 46.26], ["36", 53.71]]]]},
@@ -44,7 +42,6 @@ class Bettson < Mechanize
             odds = []
             bets = []   
             
-            # AAAAAAAAGGGGGGGGHHHHHHHHHHHHH
             odds_and_bet.each do |thingy|
                 thingy.each do |thingy2|                
                     thingy2.each do |thingy3|
@@ -151,9 +148,6 @@ class Bettson < Mechanize
             
             match = handled_total_data[match_nr]
             match_page = get(match[:location])
-            match_page_noko = Nokogiri::HTML(open(match[:location]))
-            
-            odd_nr= 1
 
             puts "Match #{match_nr+1}: at #{match[:location]}"
             # class: diff-row evTabRow bc

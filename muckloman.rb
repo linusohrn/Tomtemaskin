@@ -1,5 +1,4 @@
 require_relative 'gumman.rb'
-require_relative 'prillan.rb'
 require 'mechanize'
 require 'pp'
 # Calculator
@@ -11,8 +10,7 @@ class Muckloman < Mechanize
         super
     end
     
-    def get_arbitrage_odds(match, odds, wallet)
-        odds_out ||= {}
+    def get_arbitrage_odds(match, odds)
         odds[0].each do |odds_team1|
             odds_and_bets = []
             # pp odds_team1
@@ -43,8 +41,8 @@ class Muckloman < Mechanize
                             implied_prob_1 = (1/(Rational(odds_team1)) * 100).to_f
                             implied_prob_2 = (1/(Rational(odds_team2)) * 100).to_f
                             
-                            bet_1 = ((wallet*implied_prob_1)/market_margin).round(2)
-                            bet_2 = ((wallet*implied_prob_2)/market_margin).round(2)
+                            bet_1 = ((100*implied_prob_1)/market_margin).round(2)
+                            bet_2 = ((100*implied_prob_2)/market_margin).round(2)
                             
                             puts odds_team1.to_s + ": " + bet_1.to_s + " kr"
                             puts odds_team2.to_s + ": " + bet_2.to_s + " kr"
@@ -70,8 +68,9 @@ class Muckloman < Mechanize
             if odds_and_bets_collection != []
                 # pp match
                 # p hash
+                hash = {}
                 # pp odds_and_bets_collection
-                odds_out[match] = odds_and_bets_collection 
+                hash[match] = odds_and_bets_collection 
                 
                 Gumman.add_arbitrage_odds_db(match, odds_and_bets_collection[0])
             end
