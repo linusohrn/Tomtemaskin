@@ -36,6 +36,9 @@ class Gumman
 
         db_temp.execute('DROP TABLE IF EXISTS odds;')
 
+        db_temp.execute('DROP TABLE IF EXISTS wallet;')
+
+
         db_temp.execute('CREATE TABLE "fetches" (
             "id"	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
             "link"	TEXT NOT NULL,

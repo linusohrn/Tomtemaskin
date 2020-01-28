@@ -80,7 +80,9 @@ class Muckloman < Mechanize
         # puts hash
         # print "\n"
         # @gumman.add_odds_db(
-        return hash
+        if !odds_out.nil? && !odds_out.empty? 
+            return odds_out
+        end
         
     end
 end

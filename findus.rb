@@ -67,7 +67,7 @@ class Findus < Mechanize
                 end
             end
             
-            Gumman.add_fetch_db(sport, deltatime)
+            Gumman.add_fetch_db(sport.uri, deltatime)
             return matches
             
         end
@@ -76,6 +76,7 @@ class Findus < Mechanize
     
     def get_odds(match)
         match = get(match)
+        Gumman.add_fetch_db(match.uri, deltatime)
         # pp match.uri
         
         odds_arr = []
